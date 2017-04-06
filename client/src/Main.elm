@@ -5,11 +5,12 @@ import Msg exposing (Msg)
 import Model exposing (Model, initialModel)
 import Update exposing (update)
 import View exposing (view)
+import Command exposing (fetchPlayers)
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.none )
+    ( initialModel, fetchPlayers )
 
 
 subscriptions : Model -> Sub Msg

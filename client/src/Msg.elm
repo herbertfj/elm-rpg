@@ -1,5 +1,8 @@
 module Msg exposing (..)
 
+import Model exposing (Player)
+import RemoteData exposing (WebData)
+
 
 type Msg
-    = NoOp
+    = OnFetchPlayers (WebData (List Player))
