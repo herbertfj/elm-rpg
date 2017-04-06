@@ -1,9 +1,10 @@
 module Player.List exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 import Msg exposing (Msg)
 import Model exposing (Player)
+import Routing exposing (playerPath)
 
 
 view : List Player -> Html Msg
@@ -44,5 +45,18 @@ playerRow player =
         , td [] [ text player.name ]
         , td [] [ text (toString player.level) ]
         , td []
-            []
+            [ editBtn player ]
         ]
+
+
+editBtn : Player -> Html.Html Msg
+editBtn player =
+    let
+        path =
+            playerPath player.id
+    in
+        a
+            [ class "btn regular"
+            , href path
+            ]
+            [ i [ class "fa fa-pencil mr1" ] [], text "Edit" ]
