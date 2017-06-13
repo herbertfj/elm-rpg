@@ -45,13 +45,27 @@ playerEditPage model playerId =
             in
                 case maybePlayer of
                     Just player ->
-                        Player.Edit.view player
+                        let
+                            edit =
+                                choosePlayerEdit player model.edit
+                        in
+                            Player.Edit.view edit
 
                     Nothing ->
                         notFoundView
 
         RemoteData.Failure err ->
             text (toString err)
+
+
+choosePlayerEdit : Player -> Maybe Player -> Player
+choosePlayerEdit defaultPlayer editPlayer =
+    case editPlayer of
+        Just edit ->
+            edit
+
+        Nothing ->
+            defaultPlayer
 
 
 notFoundView : Html msg

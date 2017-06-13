@@ -1,7 +1,7 @@
 module Update exposing (..)
 
 import Msg exposing (Msg)
-import Model exposing (Model)
+import Model exposing (Model, Route(..))
 import Routing exposing (parseLocation)
 import Command exposing (savePlayerCmd)
 import Model exposing (Model, Player)
@@ -21,18 +21,20 @@ update msg model =
             in
                 ( { model | route = newRoute }, Cmd.none )
 
-        Msg.ChangeLevel player howMuch ->
-            let
-                updatedPlayer =
-                    { player | level = player.level + howMuch }
-            in
-                ( model, savePlayerCmd updatedPlayer )
-
         Msg.OnPlayerSave (Ok player) ->
             ( updatePlayer model player, Cmd.none )
 
         Msg.OnPlayerSave (Err error) ->
             ( model, Cmd.none )
+
+        Msg.ChangeEdit newEdit ->
+            ( { model | edit = Just newEdit }, Cmd.none )
+
+        Msg.CancelEdit ->
+            ( { model | edit = Nothing, route = PlayersRoute }, Cmd.none )
+
+        Msg.SaveEdit editedPlayer ->
+            ( { model | route = PlayersRoute }, savePlayerCmd editedPlayer )
 
 
 updatePlayer : Model -> Player -> Model

@@ -9,5 +9,7 @@ import Http
 type Msg
     = OnFetchPlayers (WebData (List Player))
     | OnLocationChange Location
-    | ChangeLevel Player Int
     | OnPlayerSave (Result Http.Error Player)
+    | ChangeEdit Player
+    | CancelEdit
+    | SaveEdit Player

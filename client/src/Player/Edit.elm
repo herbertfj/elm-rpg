@@ -1,8 +1,8 @@
 module Player.Edit exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, href)
-import Html.Events exposing (onClick)
+import Html.Attributes exposing (class, href, value)
+import Html.Events exposing (onClick, onInput)
 import Model exposing (Player)
 import Msg exposing (Msg)
 import Routing exposing (playersPath)
@@ -11,13 +11,13 @@ import Routing exposing (playersPath)
 view : Player -> Html Msg
 view model =
     div []
-        [ nav model
+        [ nav
         , form model
         ]
 
 
-nav : Player -> Html Msg
-nav model =
+nav : Html Msg
+nav =
     div [ class "clearfix mb2 white bg-black p1" ]
         [ listBtn ]
 
@@ -25,18 +25,41 @@ nav model =
 form : Player -> Html Msg
 form player =
     div [ class "m3" ]
-        [ h1 [] [ text player.name ]
+        [ nameEditInput player
         , formLevel player
+        , resolveForm player
         ]
+
+
+resolveForm : Player -> Html Msg
+resolveForm player =
+    div [ class "clearfix py1" ]
+        [ button [ class "btn", onClick (Msg.SaveEdit player) ] [ text "Save" ]
+        , button [ class "btn", onClick Msg.CancelEdit ] [ text "Cancel" ]
+        ]
+
+
+nameEditInput : Player -> Html Msg
+nameEditInput player =
+    let
+        message newName =
+            Msg.ChangeEdit { player | name = newName }
+    in
+        input
+            [ class "input col-3"
+            , value player.name
+            , onInput message
+            ]
+            []
 
 
 formLevel : Player -> Html Msg
 formLevel player =
     div [ class "clearfix py1" ]
-        [ div [ class "col col-5" ] [ text "Level" ]
-        , div [ class "col col-7" ]
-            [ span [ class "h2 bold" ] [ text (toString player.level) ]
-            , btnLevelDecrease player
+        [ div [] [ text "Level" ]
+        , div []
+            [ btnLevelDecrease player
+            , span [ class "h2 bold" ] [ text (toString player.level) ]
             , btnLevelIncrease player
             ]
         ]
@@ -46,7 +69,7 @@ btnLevelDecrease : Player -> Html Msg
 btnLevelDecrease player =
     let
         message =
-            Msg.ChangeLevel player -1
+            Msg.ChangeEdit { player | level = player.level - 1 }
     in
         a [ class "btn ml1 h1", onClick message ]
             [ i [ class "fa fa-minus-circle" ] [] ]
@@ -56,7 +79,7 @@ btnLevelIncrease : Player -> Html Msg
 btnLevelIncrease player =
     let
         message =
-            Msg.ChangeLevel player 1
+            Msg.ChangeEdit { player | level = player.level + 1 }
     in
         a [ class "btn ml1 h1", onClick message ]
             [ i [ class "fa fa-plus-circle" ] [] ]
