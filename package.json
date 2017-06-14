@@ -12,6 +12,7 @@
     "watch": "webpack --watch",
     "dev": "webpack-dev-server --port 3000",
     "lint": "eslint --fix 'client/src/**/*.js' 'server/**/*.js' && elm-format client/src/ client/tests --yes",
+    "pretest": "elm-test --add-dependencies client/tests/elm-package.json",
     "test": "elm-test client/tests/**/*.elm",
     "start": "nf start"
   },
