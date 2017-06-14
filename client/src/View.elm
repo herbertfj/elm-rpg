@@ -45,11 +45,7 @@ playerEditPage model playerId =
             in
                 case maybePlayer of
                     Just player ->
-                        let
-                            edit =
-                                choosePlayerEdit player model.edit
-                        in
-                            Player.Edit.view edit
+                        Player.Edit.view (choosePlayerEdit player model.edit)
 
                     Nothing ->
                         notFoundView
