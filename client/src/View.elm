@@ -59,13 +59,13 @@ playerEditPage model playerId =
 
 
 choosePlayerEdit : Player -> Maybe Player -> Player
-choosePlayerEdit defaultPlayer editPlayer =
+choosePlayerEdit existingPlayer editPlayer =
     case editPlayer of
         Just edit ->
             edit
 
         Nothing ->
-            defaultPlayer
+            existingPlayer
 
 
 notFoundView : Html msg

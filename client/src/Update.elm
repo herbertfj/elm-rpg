@@ -2,6 +2,7 @@ module Update exposing (..)
 
 import Msg exposing (Msg)
 import Model exposing (Model, Route(..))
+import Navigation
 import Routing exposing (parseLocation)
 import Command exposing (savePlayerCmd)
 import Model exposing (Model, Player)
@@ -19,10 +20,15 @@ update msg model =
                 newRoute =
                     parseLocation location
             in
-                ( { model | route = newRoute }, Cmd.none )
+                case newRoute of
+                    PlayerRoute id ->
+                        ( { model | edit = Nothing, route = newRoute }, Cmd.none )
+
+                    _ ->
+                        ( { model | route = newRoute }, Cmd.none )
 
         Msg.OnPlayerSave (Ok player) ->
-            ( updatePlayer model player, Cmd.none )
+            ( updatePlayer model player, Navigation.newUrl Routing.playersPath )
 
         Msg.OnPlayerSave (Err error) ->
             ( model, Cmd.none )
@@ -31,10 +37,10 @@ update msg model =
             ( { model | edit = Just newEdit }, Cmd.none )
 
         Msg.CancelEdit ->
-            ( { model | edit = Nothing, route = PlayersRoute }, Cmd.none )
+            ( { model | edit = Nothing }, Navigation.newUrl Routing.playersPath )
 
         Msg.SaveEdit editedPlayer ->
-            ( { model | route = PlayersRoute }, savePlayerCmd editedPlayer )
+            ( model, savePlayerCmd editedPlayer )
 
 
 updatePlayer : Model -> Player -> Model
