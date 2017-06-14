@@ -1117,9 +1117,9 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
-elm-format@^0.6.0-alpha.6:
-  version "0.6.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/elm-format/-/elm-format-0.6.0-alpha.6.tgz#c476a46f278bb8b78aa9550a7f2959d14df2cb48"
+elm-format@^0.6.1-alpha:
+  version "0.6.1-alpha"
+  resolved "https://registry.yarnpkg.com/elm-format/-/elm-format-0.6.1-alpha.tgz#daeffe95238cb8ce0d7fc6afb5047bcdd14ad7d7"
   dependencies:
     binwrap "^0.1.4"
 
