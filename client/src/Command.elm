@@ -100,3 +100,22 @@ createPlayerEncoder player =
 createPlayerUrl : String
 createPlayerUrl =
     "http://localhost:4000/players/"
+
+
+deletePlayerCmd : Player -> Cmd Msg
+deletePlayerCmd player =
+    deletePlayerRequest player
+        |> Http.send (Msg.OnPlayerDelete player.id)
+
+
+deletePlayerRequest : Player -> Http.Request String
+deletePlayerRequest player =
+    Http.request
+        { body = Http.emptyBody
+        , expect = Http.expectString
+        , headers = []
+        , method = "DELETE"
+        , timeout = Nothing
+        , url = savePlayerUrl player.id
+        , withCredentials = False
+        }

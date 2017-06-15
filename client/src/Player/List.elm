@@ -2,6 +2,7 @@ module Player.List exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
+import Html.Events exposing (onClick)
 import Msg exposing (Msg)
 import Model exposing (Player)
 import Routing exposing (playerNewPath, playerPath)
@@ -42,13 +43,15 @@ playerRow : Player -> Html Msg
 playerRow player =
     tr []
         [ td [] [ text player.name ]
-        , td [] [ text (toString player.level) ]
+        , td [ class "center" ] [ text (toString player.level) ]
         , td []
-            [ editBtn player ]
+            [ editBtn player
+            , deleteBtn player
+            ]
         ]
 
 
-editBtn : Player -> Html.Html Msg
+editBtn : Player -> Html Msg
 editBtn player =
     let
         path =
@@ -67,3 +70,16 @@ newPlayer =
         [ a [ class "btn", href playerNewPath ]
             [ text "New" ]
         ]
+
+
+deleteBtn : Player -> Html Msg
+deleteBtn player =
+    let
+        message =
+            Msg.DeletePlayer player
+    in
+        a
+            [ class "btn regular"
+            , onClick message
+            ]
+            [ i [ class "fa fa-times mr1" ] [], text "Delete" ]

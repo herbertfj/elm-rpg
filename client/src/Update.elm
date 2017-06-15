@@ -4,8 +4,8 @@ import Msg exposing (Msg)
 import Model exposing (Model, Route(..))
 import Navigation
 import Routing exposing (parseLocation)
-import Command exposing (savePlayerCmd, createPlayerCmd)
-import Model exposing (Model, Player)
+import Command exposing (createPlayerCmd, deletePlayerCmd, savePlayerCmd)
+import Model exposing (..)
 import RemoteData
 
 
@@ -54,6 +54,15 @@ update msg model =
         Msg.OnPlayerCreate (Err error) ->
             ( model, Cmd.none )
 
+        Msg.DeletePlayer player ->
+            ( model, deletePlayerCmd player )
+
+        Msg.OnPlayerDelete playerId (Ok _) ->
+            ( deletePlayer model playerId, Cmd.none )
+
+        Msg.OnPlayerDelete _ (Err _) ->
+            ( model, Cmd.none )
+
 
 updatePlayer : Model -> Player -> Model
 updatePlayer model updatedPlayer =
@@ -77,9 +86,33 @@ updatePlayers : Model -> Player -> ( Model, Cmd Msg )
 updatePlayers model newPlayer =
     case model.players of
         RemoteData.Success players ->
-            ( { model | players = RemoteData.Success (players ++ [ newPlayer ]), edit = Nothing }
-            , Navigation.newUrl Routing.playersPath
-            )
+            let
+                updatedPlayers =
+                    players
+                        ++ [ newPlayer ]
+                        |> RemoteData.Success
+            in
+                ( { model | players = updatedPlayers, edit = Nothing }
+                , Navigation.newUrl Routing.playersPath
+                )
 
         _ ->
             ( model, Cmd.none )
+
+
+deletePlayer : Model -> PlayerId -> Model
+deletePlayer model playerId =
+    case model.players of
+        RemoteData.Success players ->
+            let
+                isNotDeleted player =
+                    player.id /= playerId
+
+                updatedPlayers =
+                    List.filter isNotDeleted players
+                        |> RemoteData.Success
+            in
+                { model | players = updatedPlayers }
+
+        _ ->
+            model
