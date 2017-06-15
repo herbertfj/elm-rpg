@@ -4,6 +4,7 @@ import Html exposing (Html, div, text)
 import Msg exposing (Msg)
 import Model exposing (Model, Player, PlayerId)
 import Player.Edit
+import Player.New
 import Player.List exposing (list, nav)
 import RemoteData exposing (WebData)
 
@@ -22,6 +23,9 @@ page model =
 
         Model.PlayerRoute id ->
             playerEditPage model id
+
+        Model.PlayersNewRoute ->
+            playersNewPage model
 
         Model.NotFoundRoute ->
             notFoundView
@@ -45,7 +49,7 @@ playerEditPage model playerId =
             in
                 case maybePlayer of
                     Just player ->
-                        Player.Edit.view (choosePlayerEdit player model.edit)
+                        Player.Edit.view (Maybe.withDefault player model.edit)
 
                     Nothing ->
                         notFoundView
@@ -54,14 +58,18 @@ playerEditPage model playerId =
             text (toString err)
 
 
-choosePlayerEdit : Player -> Maybe Player -> Player
-choosePlayerEdit existingPlayer editPlayer =
-    case editPlayer of
-        Just edit ->
-            edit
+playersNewPage : Model -> Html Msg
+playersNewPage model =
+    case model.edit of
+        Just player ->
+            Player.New.view player
 
         Nothing ->
-            existingPlayer
+            Player.New.view
+                { id = ""
+                , name = ""
+                , level = 1
+                }
 
 
 notFoundView : Html msg

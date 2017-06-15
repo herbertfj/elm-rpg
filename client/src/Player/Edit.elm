@@ -12,7 +12,7 @@ view : Player -> Html Msg
 view model =
     div []
         [ nav
-        , form model
+        , form model Msg.SaveEdit
         ]
 
 
@@ -22,19 +22,19 @@ nav =
         [ listBtn ]
 
 
-form : Player -> Html Msg
-form player =
+form : Player -> (Player -> Msg) -> Html Msg
+form player saveMsg =
     div [ class "m3" ]
         [ nameEditInput player
         , formLevel player
-        , resolveForm player
+        , resolveForm player saveMsg
         ]
 
 
-resolveForm : Player -> Html Msg
-resolveForm player =
+resolveForm : Player -> (Player -> Msg) -> Html Msg
+resolveForm player saveMsg =
     div [ class "clearfix py1" ]
-        [ button [ class "btn", onClick (Msg.SaveEdit player) ] [ text "Save" ]
+        [ button [ class "btn", onClick (saveMsg player) ] [ text "Save" ]
         , button [ class "btn", onClick Msg.CancelEdit ] [ text "Cancel" ]
         ]
 

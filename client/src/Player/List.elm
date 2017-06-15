@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, href)
 import Msg exposing (Msg)
 import Model exposing (Player)
-import Routing exposing (playerPath)
+import Routing exposing (playerNewPath, playerPath)
 
 
 view : List Player -> Html Msg
@@ -12,6 +12,7 @@ view players =
     div []
         [ nav
         , list players
+        , newPlayer
         ]
 
 
@@ -27,8 +28,7 @@ list players =
         [ table []
             [ thead []
                 [ tr []
-                    [ th [] [ text "Id" ]
-                    , th [] [ text "Name" ]
+                    [ th [] [ text "Name" ]
                     , th [] [ text "Level" ]
                     , th [] [ text "Actions" ]
                     ]
@@ -41,8 +41,7 @@ list players =
 playerRow : Player -> Html Msg
 playerRow player =
     tr []
-        [ td [] [ text player.id ]
-        , td [] [ text player.name ]
+        [ td [] [ text player.name ]
         , td [] [ text (toString player.level) ]
         , td []
             [ editBtn player ]
@@ -60,3 +59,11 @@ editBtn player =
             , href path
             ]
             [ i [ class "fa fa-pencil mr1" ] [], text "Edit" ]
+
+
+newPlayer : Html Msg
+newPlayer =
+    div []
+        [ a [ class "btn", href playerNewPath ]
+            [ text "New" ]
+        ]

@@ -32,4 +32,5 @@ type alias Player =
 type Route
     = PlayersRoute
     | PlayerRoute PlayerId
+    | PlayersNewRoute
     | NotFoundRoute

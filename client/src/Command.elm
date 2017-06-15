@@ -68,3 +68,35 @@ playerEncoder player =
             ]
     in
         Encode.object attributes
+
+
+createPlayerCmd : Player -> Cmd Msg
+createPlayerCmd player =
+    createPlayerRequest player
+        |> Http.send Msg.OnPlayerCreate
+
+
+createPlayerRequest : Player -> Http.Request Player
+createPlayerRequest player =
+    Http.request
+        { body = createPlayerEncoder player |> Http.jsonBody
+        , expect = Http.expectJson playerDecoder
+        , headers = []
+        , method = "POST"
+        , timeout = Nothing
+        , url = createPlayerUrl
+        , withCredentials = False
+        }
+
+
+createPlayerEncoder : Player -> Encode.Value
+createPlayerEncoder player =
+    Encode.object
+        [ ( "name", Encode.string player.name )
+        , ( "level", Encode.int player.level )
+        ]
+
+
+createPlayerUrl : String
+createPlayerUrl =
+    "http://localhost:4000/players/"

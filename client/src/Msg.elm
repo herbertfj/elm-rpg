@@ -13,3 +13,5 @@ type Msg
     | ChangeEdit Player
     | CancelEdit
     | SaveEdit Player
+    | SaveNew Player
+    | OnPlayerCreate (Result Http.Error Player)

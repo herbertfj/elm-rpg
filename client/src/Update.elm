@@ -4,7 +4,7 @@ import Msg exposing (Msg)
 import Model exposing (Model, Route(..))
 import Navigation
 import Routing exposing (parseLocation)
-import Command exposing (savePlayerCmd)
+import Command exposing (savePlayerCmd, createPlayerCmd)
 import Model exposing (Model, Player)
 import RemoteData
 
@@ -22,6 +22,9 @@ update msg model =
             in
                 case newRoute of
                     PlayerRoute id ->
+                        ( { model | edit = Nothing, route = newRoute }, Cmd.none )
+
+                    PlayersNewRoute ->
                         ( { model | edit = Nothing, route = newRoute }, Cmd.none )
 
                     _ ->
@@ -42,6 +45,15 @@ update msg model =
         Msg.SaveEdit editedPlayer ->
             ( model, savePlayerCmd editedPlayer )
 
+        Msg.SaveNew newPlayer ->
+            ( model, createPlayerCmd newPlayer )
+
+        Msg.OnPlayerCreate (Ok newPlayer) ->
+            updatePlayers model newPlayer
+
+        Msg.OnPlayerCreate (Err error) ->
+            ( model, Cmd.none )
+
 
 updatePlayer : Model -> Player -> Model
 updatePlayer model updatedPlayer =
@@ -59,3 +71,15 @@ updatePlayer model updatedPlayer =
             RemoteData.map updatePlayerList model.players
     in
         { model | players = updatedPlayers }
+
+
+updatePlayers : Model -> Player -> ( Model, Cmd Msg )
+updatePlayers model newPlayer =
+    case model.players of
+        RemoteData.Success players ->
+            ( { model | players = RemoteData.Success (players ++ [ newPlayer ]), edit = Nothing }
+            , Navigation.newUrl Routing.playersPath
+            )
+
+        _ ->
+            ( model, Cmd.none )
